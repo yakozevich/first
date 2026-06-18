@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gossip Girl Fan · XOXO</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+  /* ══ INLINE EXTRAS ══ */
+
+  /* ── SVG Cards ── */
+  .svg-frame {
+    width:100%; border-radius:12px; overflow:hidden;
+    background:linear-gradient(135deg,#0D0D1A,#12121F);
+    border:1px solid #1E1E30;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .svg-frame svg { display:block; }
+
+  /* ── About decorative panel ── */
+  .about-deco {
+    display:flex; flex-direction:column; gap:20px;
+  }
+  .deco-quote {
+    background:linear-gradient(135deg,#12121F,#0D0D1A);
+    border:1px solid #1E1E30;
+    border-left:3px solid #C9A84C;
+    border-radius:0 12px 12px 0;
+    padding:28px 32px;
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size:1.15rem;
+    color:#D4C9B0;
+    line-height:1.7;
+    position:relative;
+  }
+  .deco-quote::before {
+    content:'"';
+    position:absolute; top:-10px; left:20px;
+    font-size:5rem; color:#C9A84C; opacity:.15;
+    font-style:normal; line-height:1;
+  }
+  .deco-quote cite {
+    display:block; margin-top:12px;
+    font-size:.75rem; font-style:normal;
+    letter-spacing:3px; text-transform:uppercase;
+    color:#7A6020;
+  }
+
+  /* ── Season cards ── */
+  .seasons-grid {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:16px;
+    margin-top:32px;
+  }
+  .season-card {
+    background:#12121F; border:1px solid #1E1E30;
+    border-radius:10px; padding:20px 16px; text-align:center;
+    transition:.3s; cursor:default; position:relative; overflow:hidden;
+  }
+  .season-card::before {
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(135deg,rgba(201,168,76,.08),transparent);
+    opacity:0; transition:.3s;
+  }
+  .season-card:hover { border-color:#C9A84C; transform:translateY(-4px); }
+  .season-card:hover::before { opacity:1; }
+  .season-num {
+    font-family:'Playfair Display',serif; font-size:2rem;
+    font-weight:900; color:#C9A84C; line-height:1;
+  }
+  .season-label { font-size:.65rem; letter-spacing:3px; text-transform:uppercase; color:#7A7060; margin-top:4px; }
+  .season-ep { font-size:.8rem; color:#D4C9B0; margin-top:8px; }
+
+  /* ── Character SVG cards ── */
+  .char-svg-wrap { height:280px; position:relative; overflow:hidden; }
+  .char-svg-wrap svg { width:100%; height:100%; }
+
+  /* ── Gallery: CSS art panels ── */
+  .art-panel {
+    width:100%; aspect-ratio:4/3; border-radius:12px; overflow:hidden;
+    position:relative; cursor:pointer;
+    transition:transform .4s;
+  }
+  .art-panel:hover { transform:scale(1.02); }
+  .art-panel:hover .gallery-caption { opacity:1; }
+
+  /* individual art panels */
+  .art-ny {
+    background:linear-gradient(180deg,#050510 0%,#0a0a20 40%,#1a0a05 100%);
+  }
+  .art-met {
+    background:linear-gradient(160deg,#0a0510 0%,#1a1025 60%,#0d0d0d 100%);
+  }
+  .art-manhattan {
+    background:linear-gradient(180deg,#020208 0%,#080820 50%,#0a050a 100%);
+  }
+  .art-party {
+    background:linear-gradient(135deg,#0a0005 0%,#150010 50%,#050010 100%);
+  }
+  .art-park {
+    background:linear-gradient(180deg,#020a02 0%,#051005 40%,#0a0d0a 100%);
+  }
+  .art-brooklyn {
+    background:linear-gradient(180deg,#020508 0%,#050a10 50%,#08050a 100%);
+  }
+
+  /* ── Mood board strip ── */
+  .moodboard {
+    display:flex; gap:12px; margin-top:48px; overflow-x:auto;
+    padding-bottom:8px; scrollbar-width:thin;
+    scrollbar-color:#7A6020 transparent;
+  }
+  .mood-chip {
+    flex:0 0 auto;
+    background:#12121F; border:1px solid #1E1E30;
+    border-radius:40px; padding:10px 20px;
+    font-size:.75rem; letter-spacing:2px; text-transform:uppercase;
+    color:#D4C9B0; white-space:nowrap;
+    transition:.3s; cursor:default;
+  }
+  .mood-chip:hover { border-color:#C9A84C; color:#C9A84C; background:rgba(201,168,76,.07); }
+
+  /* ── Timeline ── */
+  .timeline { position:relative; padding-left:32px; }
+  .timeline::before {
+    content:''; position:absolute; left:0; top:0; bottom:0;
+    width:1px; background:linear-gradient(to bottom,transparent,#C9A84C,transparent);
+  }
+  .tl-item { position:relative; margin-bottom:36px; }
+  .tl-item::before {
+    content:''; position:absolute; left:-37px; top:6px;
+    width:10px; height:10px; border-radius:50%;
+    background:#C9A84C; box-shadow:0 0 12px rgba(201,168,76,.5);
+  }
+  .tl-year {
+    font-size:.65rem; font-weight:700; letter-spacing:4px;
+    text-transform:uppercase; color:#C9A84C; margin-bottom:4px;
+  }
+  .tl-text { font-size:.9rem; color:#D4C9B0; }
+
+  @media(max-width:960px){
+    .seasons-grid{grid-template-columns:repeat(3,1fr);}
+  }
+  @media(max-width:640px){
+    .seasons-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav class="nav">
+  <a href="#" class="nav-logo">GG</a>
+  <ul class="nav-links">
+    <li><a href="#about">О сериале</a></li>
+    <li><a href="#characters">Персонажи</a></li>
+    <li><a href="#gallery">Галерея</a></li>
+    <li><a href="#rating">Рейтинг</a></li>
+    <li><a href="#newsletter">XOXO</a></li>
+  </ul>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="particles" id="particles"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Моё любимое хобби</div>
+    <h1 class="hero-title"><span>Gossip</span><br>Girl</h1>
+    <p class="hero-tagline">"Ты знаешь, что любишь меня. XOXO, Сплетница."</p>
+    <div class="hero-buttons">
+      <a href="#about" class="btn btn-primary">✦ Узнать больше</a>
+      <a href="#gallery" class="btn btn-outline">Смотреть галерею</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MARQUEE ══ -->
+<div class="quotes-banner">
+  <div class="marquee-track">
+    <span class="marquee-item">You know you love me</span>
+    <span class="marquee-item">XOXO Gossip Girl</span>
+    <span class="marquee-item">На Верхнем Ист-Сайде правила существуют для того, чтобы их нарушать</span>
+    <span class="marquee-item">Блер Уолдорф всегда побеждает</span>
+    <span class="marquee-item">Серена ван дер Вудсен снова вернулась</span>
+    <span class="marquee-item">You know you love me</span>
+    <span class="marquee-item">XOXO Gossip Girl</span>
+    <span class="marquee-item">На Верхнем Ист-Сайде правила существуют для того, чтобы их нарушать</span>
+    <span class="marquee-item">Блер Уолдорф всегда побеждает</span>
+    <span class="marquee-item">Серена ван дер Вудсен снова вернулась</span>
+  </div>
+</div>
+
+<!-- ══ ABOUT ══ -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-grid">
+
+      <!-- Left: quotes + timeline -->
+      <div class="about-deco fade-up">
+
+        <div class="deco-quote">
+          Я — голос, которого ты не видишь. Я — правда, которую ты боишься услышать.
+          <cite>— Gossip Girl</cite>
+        </div>
+
+        <div class="deco-quote">
+          Единственный способ победить в игре — знать все правила лучше остальных.
+          <cite>— Блер Уолдорф</cite>
+        </div>
+
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-year">2007</div>
+            <div class="tl-text">Премьера сериала на канале The CW. Нью-Йорк влюбился.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2009</div>
+            <div class="tl-text">Сезон 3 — Блер и Чак достигают пика своей истории.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2012</div>
+            <div class="tl-text">Финал. Личность Сплетницы раскрыта. Мир шокирован.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: text -->
+      <div class="fade-up" style="transition-delay:.15s">
+        <div class="section-label">О сериале</div>
+        <h2 class="section-title">Жизнь на<br><em>Верхнем Ист-Сайде</em></h2>
+        <div class="divider"></div>
+        <p>«Сплетница» — культовый американский сериал 2007–2012 годов, основанный на серии книг Сесили фон Зигесар. Шесть сезонов роскоши, интриг и безупречного стиля покорили весь мир.</p>
+        <p>Истории о жизни элитной молодёжи Нью-Йорка — Блер Уолдорф, Серены ван дер Вудсен, Чака Басса и Дэна Хэмфри — наполнены тайнами, предательствами и незабываемой модой.</p>
+        <p>Этот сайт — моя любовь к сериалу, который я пересматриваю снова и снова.</p>
+
+        <div class="seasons-grid">
+          <div class="season-card"><div class="season-num">6</div><div class="season-label">Сезонов</div></div>
+          <div class="season-card"><div class="season-num">121</div><div class="season-label">Эпизодов</div></div>
+          <div class="season-card"><div class="season-num">∞</div><div class="season-label">Пересмотров</div></div>
+          <div class="season-card"><div class="season-num">4</div><div class="season-label">Главных героя</div><div class="season-ep">Blair · Serena · Chuck · Dan</div></div>
+          <div class="season-card"><div class="season-num">1</div><div class="season-label">Сплетница</div><div class="season-ep">XOXO</div></div>
+          <div class="season-card"><div class="season-num">♥</div><div class="season-label">Любимый сериал</div></div>
+        </div>
+
+        <div class="moodboard">
+          <div class="mood-chip">Upper East Side</div>
+          <div class="mood-chip">Fashion Week</div>
+          <div class="mood-chip">Met Steps</div>
+          <div class="mood-chip">Chuck & Blair</div>
+          <div class="mood-chip">Manhattan Nights</div>
+          <div class="mood-chip">Waldorf Designs</div>
+          <div class="mood-chip">Bass Industries</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CHARACTERS ══ -->
+<section class="characters" id="characters">
+  <div class="container">
+    <div class="fade-up">
+      <div class="section-label">Главные герои</div>
+      <h2 class="section-title">Звёзды<br><em>Верхнего Ист-Сайда</em></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="characters-grid">
+
+      <!-- Blair -->
+      <div class="char-card fade-up">
+        <div class="char-svg-wrap">
+          <svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="bg1" cx="50%" cy="40%">
+                <stop offset="0%" stop-color="#1a1025"/>
+                <stop offset="100%" stop-color="#080510"/>
+              </radialGradient>
+              <radialGradient id="glow1" cx="50%" cy="50%">
+                <stop offset="0%" stop-color="#C9A84C" stop-opacity=".3"/>
+                <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect width="300" height="280" fill="url(#bg1)"/>
+            <ellipse cx="150" cy="120" rx="80" ry="80" fill="url(#glow1)"/>
+            <!-- Crown -->
+            <g transform="translate(105,60)">
+              <polygon points="45,0 55,30 75,10 65,40 85,25 75,50 45,45 15,50 5,25 25,40 15,10 35,30" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity=".8"/>
+              <circle cx="45" cy="0" r="3" fill="#C9A84C"/>
+              <circle cx="85" cy="25" r="2.5" fill="#C9A84C"/>
+              <circle cx="5" cy="25" r="2.5" fill="#C9A84C"/>
+            </g>
+            <!-- B monogram -->
+            <text x="150" y="160" text-anchor="middle" font-family="Georgia,serif" font-size="64" font-weight="900" fill="#C9A84C" opacity=".15">B</text>
+            <text x="150" y="155" text-anchor="middle" font-family="Georgia,serif" font-size="32" font-weight="700" fill="#C9A84C">Blair</text>
+            <!-- Stars -->
+            <circle cx="60" cy="50" r="1.5" fill="#C9A84C" opacity=".5"/>
+            <circle cx="240" cy="70" r="1" fill="#C9A84C" opacity=".4"/>
+            <circle cx="80" cy="200" r="1" fill="#C9A84C" opacity=".3"/>
+            <circle cx="220" cy="180" r="1.5" fill="#C9A84C" opacity=".4"/>
+            <circle cx="30" cy="150" r="1" fill="#C9A84C" opacity=".3"/>
+            <circle cx="270" cy="130" r="1" fill="#C9A84C" opacity=".5"/>
+            <!-- Ribbon -->
+            <path d="M90,220 Q150,205 210,220 Q150,235 90,220Z" fill="#C9A84C" opacity=".2"/>
+            <path d="M90,220 Q150,205 210,220" stroke="#C9A84C" stroke-width="1" fill="none" opacity=".6"/>
+          </svg>
+          <div class="char-overlay"></div>
+          <div class="char-badge">Queen B</div>
+        </div>
+        <div class="char-info">
+          <div class="char-name">Блер Уолдорф</div>
+          <div class="char-role">Королева школы</div>
+          <p class="char-quote">«Мне нужно быть лучшей. Всегда.»</p>
+        </div>
+      </div>
+
+      <!-- Serena -->
+      <div class="char-card fade-up" style="transition-delay:.1s">
+        <div class="char-svg-wrap">
+          <svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="bg2" cx="50%" cy="40%">
+                <stop offset="0%" stop-color="#0d1520"/>
+                <stop offset="100%" stop-color="#050810"/>
+              </radialGradient>
+              <radialGradient id="glow2" cx="50%" cy="50%">
+                <stop offset="0%" stop-color="#F0D080" stop-opacity=".25"/>
+                <stop offset="100%" stop-color="#F0D080" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect width="300" height="280" fill="url(#bg2)"/>
+            <ellipse cx="150" cy="110" rx="90" ry="70" fill="url(#glow2)"/>
+            <!-- Sun rays -->
+            <g transform="translate(150,100)" opacity=".5">
+              <line x1="0" y1="-50" x2="0" y2="-65" stroke="#F0D080" stroke-width="1.5"/>
+              <line x1="35" y1="-35" x2="45" y2="-46" stroke="#F0D080" stroke-width="1.5"/>
+              <line x1="50" y1="0" x2="65" y2="0" stroke="#F0D080" stroke-width="1.5"/>
+              <line x1="35" y1="35" x2="45" y2="46" stroke="#F0D080" stroke-width="1.5"/>
+              <line x1="-35" y1="-35" x2="-45" y2="-46" stroke="#F0D080" stroke-width="1.5"/>
+              <line x1="-50" y1="0" x2="-65" y2="0" stroke="#F0D080" stroke-width="1.5"/>
+              <circle cx="0" cy="0" r="28" fill="none" stroke="#F0D080" stroke-width="1.5"/>
+              <circle cx="0" cy="0" r="18" fill="#F0D080" opacity=".15"/>
+            </g>
+            <text x="150" y="165" text-anchor="middle" font-family="Georgia,serif" font-size="28" font-weight="700" fill="#F0D080">Serena</text>
+            <!-- Sparkles -->
+            <text x="70" y="80" font-size="14" fill="#F0D080" opacity=".6">✦</text>
+            <text x="220" y="60" font-size="10" fill="#F0D080" opacity=".4">✦</text>
+            <text x="50" y="190" font-size="8" fill="#F0D080" opacity=".3">✦</text>
+            <text x="240" y="200" font-size="12" fill="#F0D080" opacity=".5">✦</text>
+            <text x="30" y="120" font-size="6" fill="#F0D080" opacity=".4">✦</text>
+          </svg>
+          <div class="char-overlay"></div>
+          <div class="char-badge">It Girl</div>
+        </div>
+        <div class="char-info">
+          <div class="char-name">Серена ван дер Вудсен</div>
+          <div class="char-role">Золотая девочка</div>
+          <p class="char-quote">«Я пытаюсь быть лучше.»</p>
+        </div>
+      </div>
+
+      <!-- Chuck -->
+      <div class="char-card fade-up" style="transition-delay:.2s">
+        <div class="char-svg-wrap">
+          <svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="bg3" cx="50%" cy="40%">
+                <stop offset="0%" stop-color="#150808"/>
+                <stop offset="100%" stop-color="#080505"/>
+              </radialGradient>
+            </defs>
+            <rect width="300" height="280" fill="url(#bg3)"/>
+            <!-- Tie / suit silhouette -->
+            <rect x="120" y="130" width="60" height="100" rx="4" fill="#C9A84C" opacity=".08"/>
+            <polygon points="150,130 138,175 150,168 162,175" fill="#C9A84C" opacity=".3"/>
+            <line x1="150" y1="175" x2="150" y2="228" stroke="#C9A84C" stroke-width="2" opacity=".3"/>
+            <!-- C monogram circle -->
+            <circle cx="150" cy="95" r="45" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity=".4"/>
+            <path d="M178,75 A35,35 0 1 0 178,115" fill="none" stroke="#C9A84C" stroke-width="3" opacity=".8" stroke-linecap="round"/>
+            <text x="150" y="105" text-anchor="middle" font-family="Georgia,serif" font-size="28" font-weight="900" fill="#C9A84C" opacity=".5">C</text>
+            <text x="150" y="170" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#C9A84C">Chuck</text>
+            <!-- dots -->
+            <circle cx="40" cy="40" r="1.5" fill="#C9A84C" opacity=".3"/>
+            <circle cx="260" cy="50" r="1" fill="#C9A84C" opacity=".3"/>
+            <circle cx="50" cy="220" r="1" fill="#C9A84C" opacity=".2"/>
+          </svg>
+          <div class="char-overlay"></div>
+          <div class="char-badge">Bass</div>
+        </div>
+        <div class="char-info">
+          <div class="char-name">Чак Басс</div>
+          <div class="char-role">Тёмная лошадка</div>
+          <p class="char-quote">«Я Чак Басс.»</p>
+        </div>
+      </div>
+
+      <!-- Dan -->
+      <div class="char-card fade-up" style="transition-delay:.3s">
+        <div class="char-svg-wrap">
+          <svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg4" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#080d15"/>
+                <stop offset="100%" stop-color="#050810"/>
+              </linearGradient>
+            </defs>
+            <rect width="300" height="280" fill="url(#bg4)"/>
+            <!-- Book / pen -->
+            <rect x="85" y="70" width="90" height="120" rx="4" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity=".4"/>
+            <rect x="90" y="75" width="80" height="110" rx="2" fill="#C9A84C" opacity=".04"/>
+            <line x1="100" y1="100" x2="165" y2="100" stroke="#C9A84C" stroke-width="1" opacity=".3"/>
+            <line x1="100" y1="112" x2="165" y2="112" stroke="#C9A84C" stroke-width="1" opacity=".3"/>
+            <line x1="100" y1="124" x2="155" y2="124" stroke="#C9A84C" stroke-width="1" opacity=".2"/>
+            <line x1="100" y1="136" x2="160" y2="136" stroke="#C9A84C" stroke-width="1" opacity=".2"/>
+            <line x1="100" y1="148" x2="148" y2="148" stroke="#C9A84C" stroke-width="1" opacity=".15"/>
+            <!-- pen -->
+            <line x1="175" y1="155" x2="215" y2="115" stroke="#C9A84C" stroke-width="2" opacity=".6" stroke-linecap="round"/>
+            <polygon points="175,155 169,161 181,157" fill="#C9A84C" opacity=".6"/>
+            <text x="150" y="230" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#C9A84C" opacity=".8">Dan</text>
+            <!-- Brooklyn bridge hint -->
+            <path d="M30,250 L30,200 L60,180 L90,200 L90,250" fill="none" stroke="#C9A84C" stroke-width="1" opacity=".2"/>
+            <path d="M210,250 L210,200 L240,180 L270,200 L270,250" fill="none" stroke="#C9A84C" stroke-width="1" opacity=".2"/>
+            <line x1="30" y1="210" x2="270" y2="210" stroke="#C9A84C" stroke-width="1" opacity=".15"/>
+          </svg>
+          <div class="char-overlay"></div>
+          <div class="char-badge">Outsider</div>
+        </div>
+        <div class="char-info">
+          <div class="char-name">Дэн Хэмфри</div>
+          <div class="char-role">Бруклинский чужак</div>
+          <p class="char-quote">«Я никогда не был частью их мира.»</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ GALLERY: CSS ART ══ -->
+<section class="gallery" id="gallery">
+  <div class="container">
+    <div class="fade-up">
+      <div class="section-label">Галерея</div>
+      <h2 class="section-title">Незабываемые<br><em>Моменты</em></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="gallery-tabs fade-up">
+      <button class="tab-btn active">Все</button>
+      <button class="tab-btn">Мода</button>
+      <button class="tab-btn">Романтика</button>
+      <button class="tab-btn">Интриги</button>
+    </div>
+    <div class="gallery-grid">
+
+      <!-- 1: NYC skyline SVG -->
+      <div class="gallery-item art-panel fade-up">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+          <!-- Sky gradient -->
+          <defs>
+            <linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#02020c"/>
+              <stop offset="60%" stop-color="#0a0820"/>
+              <stop offset="100%" stop-color="#1a0d05"/>
+            </linearGradient>
+          </defs>
+          <rect width="400" height="300" fill="url(#sky1)"/>
+          <!-- Stars -->
+          <circle cx="50" cy="30" r="1" fill="white" opacity=".6"/>
+          <circle cx="120" cy="20" r="1.5" fill="white" opacity=".4"/>
+          <circle cx="200" cy="15" r="1" fill="white" opacity=".5"/>
+          <circle cx="300" cy="25" r="1" fill="white" opacity=".4"/>
+          <circle cx="350" cy="10" r="1.5" fill="white" opacity=".5"/>
+          <circle cx="80" cy="50" r="1" fill="#C9A84C" opacity=".6"/>
+          <circle cx="320" cy="45" r="1" fill="#C9A84C" opacity=".5"/>
+          <!-- Buildings silhouette -->
+          <rect x="0" y="180" width="30" height="120" fill="#050510"/>
+          <rect x="25" y="160" width="20" height="140" fill="#060612"/>
+          <rect x="40" y="140" width="25" height="160" fill="#050510"/>
+          <rect x="60" y="170" width="15" height="130" fill="#060612"/>
+          <rect x="70" y="120" width="30" height="180" fill="#050510"/>
+          <!-- Empire State -->
+          <rect x="180" y="60" width="40" height="240" fill="#050510"/>
+          <rect x="188" y="40" width="24" height="30" fill="#060612"/>
+          <rect x="193" y="20" width="14" height="25" fill="#050510"/>
+          <rect x="196" y="5" width="8" height="18" fill="#060612"/>
+          <line x1="200" y1="0" x2="200" y2="5" stroke="#C9A84C" stroke-width="2"/>
+          <!-- Other buildings -->
+          <rect x="220" y="100" width="35" height="200" fill="#060612"/>
+          <rect x="250" y="130" width="25" height="170" fill="#050510"/>
+          <rect x="270" y="110" width="30" height="190" fill="#060612"/>
+          <rect x="295" y="150" width="20" height="150" fill="#050510"/>
+          <rect x="310" y="120" width="30" height="180" fill="#060612"/>
+          <rect x="335" y="160" width="25" height="140" fill="#050510"/>
+          <rect x="355" y="140" width="45" height="160" fill="#060612"/>
+          <!-- Windows glow -->
+          <rect x="185" y="80" width="4" height="3" fill="#C9A84C" opacity=".5"/>
+          <rect x="195" y="80" width="4" height="3" fill="#C9A84C" opacity=".4"/>
+          <rect x="185" y="90" width="4" height="3" fill="#C9A84C" opacity=".3"/>
+          <rect x="225" y="110" width="3" height="2" fill="#F0D080" opacity=".4"/>
+          <rect x="232" y="120" width="3" height="2" fill="#F0D080" opacity=".3"/>
+          <rect x="275" y="130" width="3" height="2" fill="#C9A84C" opacity=".4"/>
+          <!-- Moon -->
+          <circle cx="340" cy="40" r="18" fill="#1a1510"/>
+          <circle cx="334" cy="35" r="18" fill="#02020c"/>
+          <circle cx="346" cy="40" r="15" fill="none" stroke="#C9A84C" stroke-width=".5" opacity=".4"/>
+          <!-- River reflection -->
+          <rect x="0" y="260" width="400" height="40" fill="#030315" opacity=".8"/>
+          <line x1="60" y1="265" x2="160" y2="265" stroke="#C9A84C" stroke-width=".5" opacity=".2"/>
+          <line x1="180" y1="268" x2="260" y2="268" stroke="#F0D080" stroke-width=".5" opacity=".3"/>
+        </svg>
+        <div class="gallery-caption">
+          <div class="gallery-caption-title">Огни Нью-Йорка</div>
+          <div class="gallery-caption-ep">Манхэттен · Верхний Ист-Сайд</div>
+        </div>
+      </div>
+
+      <!-- 2: Met Steps SVG -->
+      <div class="gallery-item art-panel fade-up" style="transition-delay:.1s">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+          <defs>
+            <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#08050f"/>
+              <stop offset="100%" stop-color="#150d20"/>
+            </linearGradient>
+          </defs>
+          <rect width="400" height="300" fill="url(#sky2)"/>
+          <!-- Columns -->
+          <rect x="40" y="60" width="18" height="180" fill="#0d0d1a"/>
+          <rect x="80" y="60" width="18" height="180" fill="#0d0d1a"/>
+          <rect x="120" y="60" width="18" height="180" fill="#0d0d1a"/>
+          <rect x="160" y="60" width="18" height="180" fill="#0d0d1a"/>
+          <rect x="200" y="60" width="18" height="180" fill="#0d0d1a"/>
+          <rect x="240" y="60" width="18" height="180" fill="#0d0d1a"/>
+          <rect x="280" y="60" width="18" height="180" fill="#0d0d1a"/>
+          <rect x="320" y="60" width="18" height="180" fill="#0d0d1a"/>
+          <rect x="360" y="60" width="18" height="180" fill="#0d0d1a"/>
+          <!-- Pediment -->
+          <polygon points="20,60 200,10 380,60" fill="#0a0a18" stroke="#C9A84C" stroke-width="1" opacity=".6"/>
+          <!-- Frieze line -->
+          <rect x="20" y="55" width="360" height="8" fill="#C9A84C" opacity=".15"/>
+          <!-- Steps -->
+          <rect x="0" y="240" width="400" height="12" fill="#0d0d1a"/>
+          <rect x="10" y="252" width="380" height="12" fill="#0a0a15"/>
+          <rect x="20" y="264" width="360" height="12" fill="#0d0d1a"/>
+          <rect x="30" y="276" width="340" height="24" fill="#0a0a15"/>
+          <!-- Gold accents -->
+          <line x1="20" y1="60" x2="380" y2="60" stroke="#C9A84C" stroke-width="1.5" opacity=".5"/>
+          <line x1="0" y1="240" x2="400" y2="240" stroke="#C9A84C" stroke-width="1" opacity=".3"/>
+          <!-- Glow on steps -->
+          <ellipse cx="200" cy="245" rx="120" ry="8" fill="#C9A84C" opacity=".05"/>
+          <!-- Stars -->
+          <circle cx="100" cy="30" r="1" fill="white" opacity=".4"/>
+          <circle cx="300" cy="25" r="1.5" fill="white" opacity=".3"/>
+          <circle cx="50" cy="20" r="1" fill="#C9A84C" opacity=".5"/>
+        </svg>
+        <div class="gallery-caption">
+          <div class="gallery-caption-title">Ступени Мета</div>
+          <div class="gallery-caption-ep">Трон Блер</div>
+        </div>
+      </div>
+
+      <!-- 3: Manhattan abstract -->
+      <div class="gallery-item art-panel fade-up" style="transition-delay:.2s">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+          <defs>
+            <radialGradient id="sky3" cx="50%" cy="30%">
+              <stop offset="0%" stop-color="#100820"/>
+              <stop offset="100%" stop-color="#020208"/>
+            </radialGradient>
+          </defs>
+          <rect width="400" height="300" fill="url(#sky3)"/>
+          <!-- Abstract grid — city from above -->
+          <g opacity=".4" stroke="#C9A84C" stroke-width=".5" fill="none">
+            <line x1="0" y1="100" x2="400" y2="100"/>
+            <line x1="0" y1="150" x2="400" y2="180"/>
+            <line x1="0" y1="200" x2="400" y2="240"/>
+            <line x1="100" y1="0" x2="80" y2="300"/>
+            <line x1="200" y1="0" x2="200" y2="300"/>
+            <line x1="300" y1="0" x2="320" y2="300"/>
+          </g>
+          <!-- GG monogram large -->
+          <text x="200" y="175" text-anchor="middle" font-family="Georgia,serif" font-size="120" font-weight="900" fill="#C9A84C" opacity=".06">GG</text>
+          <text x="200" y="165" text-anchor="middle" font-family="Georgia,serif" font-size="48" font-weight="900" fill="#C9A84C" opacity=".5">GG</text>
+          <circle cx="200" cy="140" r="70" fill="none" stroke="#C9A84C" stroke-width=".8" opacity=".3"/>
+          <circle cx="200" cy="140" r="90" fill="none" stroke="#C9A84C" stroke-width=".5" opacity=".15"/>
+          <!-- sparkles -->
+          <text x="80" y="70" font-size="16" fill="#F0D080" opacity=".5">✦</text>
+          <text x="310" y="60" font-size="12" fill="#F0D080" opacity=".4">✦</text>
+          <text x="340" y="220" font-size="10" fill="#C9A84C" opacity=".4">✦</text>
+          <text x="50" y="240" font-size="8" fill="#C9A84C" opacity=".3">✦</text>
+        </svg>
+        <div class="gallery-caption">
+          <div class="gallery-caption-title">Горизонт Манхэттена</div>
+          <div class="gallery-caption-ep">Финальная сцена</div>
+        </div>
+      </div>
+
+      <!-- 4: Party lights -->
+      <div class="gallery-item art-panel fade-up" style="transition-delay:.1s">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+          <defs>
+            <radialGradient id="party1" cx="30%" cy="40%"><stop offset="0%" stop-color="#200010"/><stop offset="100%" stop-color="#050005"/></radialGradient>
+            <radialGradient id="party2" cx="70%" cy="60%"><stop offset="0%" stop-color="#100020"/><stop offset="100%" stop-color="#050005" stop-opacity="0"/></radialGradient>
+          </defs>
+          <rect width="400" height="300" fill="#030005"/>
+          <ellipse cx="120" cy="120" rx="100" ry="80" fill="url(#party1)" opacity=".8"/>
+          <ellipse cx="280" cy="180" rx="100" ry="80" fill="url(#party2)" opacity=".8"/>
+          <!-- Chandelier -->
+          <line x1="200" y1="0" x2="200" y2="40" stroke="#C9A84C" stroke-width="1.5" opacity=".6"/>
+          <ellipse cx="200" cy="45" rx="30" ry="8" fill="none" stroke="#C9A84C" stroke-width="1" opacity=".5"/>
+          <circle cx="185" cy="55" r="3" fill="#F0D080" opacity=".8"/>
+          <circle cx="200" cy="58" r="3" fill="#F0D080" opacity=".8"/>
+          <circle cx="215" cy="55" r="3" fill="#F0D080" opacity=".8"/>
+          <circle cx="177" cy="48" r="2" fill="#C9A84C" opacity=".6"/>
+          <circle cx="223" cy="48" r="2" fill="#C9A84C" opacity=".6"/>
+          <!-- Scattered lights -->
+          <circle cx="60" cy="80" r="3" fill="#C9A84C" opacity=".7"/>
+          <circle cx="90" cy="60" r="2" fill="#F0D080" opacity=".6"/>
+          <circle cx="320" cy="90" r="3" fill="#C9A84C" opacity=".6"/>
+          <circle cx="350" cy="70" r="2" fill="#F0D080" opacity=".5"/>
+          <circle cx="150" cy="200" r="2" fill="#C9A84C" opacity=".4"/>
+          <circle cx="260" cy="220" r="2" fill="#F0D080" opacity=".4"/>
+          <circle cx="40" cy="180" r="1.5" fill="#C9A84C" opacity=".5"/>
+          <circle cx="370" cy="160" r="1.5" fill="#F0D080" opacity=".4"/>
+          <!-- Dance floor reflection -->
+          <rect x="50" y="240" width="300" height="60" fill="#08000f" opacity=".9"/>
+          <line x1="50" y1="240" x2="350" y2="240" stroke="#C9A84C" stroke-width="1" opacity=".3"/>
+          <ellipse cx="200" cy="242" rx="80" ry="4" fill="#C9A84C" opacity=".08"/>
+        </svg>
+        <div class="gallery-caption">
+          <div class="gallery-caption-title">Ночная жизнь</div>
+          <div class="gallery-caption-ep">Вечеринки Чака Басса</div>
+        </div>
+      </div>
+
+      <!-- 5: Central Park -->
+      <div class="gallery-item art-panel fade-up" style="transition-delay:.2s">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+          <defs>
+            <linearGradient id="park" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#020a02"/>
+              <stop offset="50%" stop-color="#051005"/>
+              <stop offset="100%" stop-color="#020802"/>
+            </linearGradient>
+          </defs>
+          <rect width="400" height="300" fill="url(#park)"/>
+          <!-- Moon -->
+          <circle cx="320" cy="50" r="25" fill="#0d1208"/>
+          <circle cx="312" cy="44" r="25" fill="#020a02"/>
+          <circle cx="326" cy="50" r="22" fill="none" stroke="#C9A84C" stroke-width=".5" opacity=".4"/>
+          <!-- Stars -->
+          <circle cx="50" cy="30" r="1" fill="white" opacity=".5"/>
+          <circle cx="150" cy="20" r="1.5" fill="white" opacity=".4"/>
+          <circle cx="250" cy="35" r="1" fill="#C9A84C" opacity=".5"/>
+          <!-- Trees left -->
+          <ellipse cx="60" cy="160" rx="40" ry="60" fill="#030d03"/>
+          <ellipse cx="40" cy="180" rx="30" ry="50" fill="#030d03"/>
+          <rect x="57" y="200" width="6" height="60" fill="#020802"/>
+          <!-- Trees right -->
+          <ellipse cx="340" cy="155" rx="45" ry="65" fill="#030d03"/>
+          <ellipse cx="365" cy="175" rx="30" ry="50" fill="#030d03"/>
+          <rect x="337" y="195" width="6" height="65" fill="#020802"/>
+          <!-- Path -->
+          <ellipse cx="200" cy="260" rx="100" ry="20" fill="#04100a" opacity=".8"/>
+          <path d="M100,300 Q200,240 300,300" fill="#060f06" stroke="#C9A84C" stroke-width=".5" opacity=".3"/>
+          <!-- Bench -->
+          <rect x="160" y="230" width="80" height="6" rx="2" fill="#0a1a0a"/>
+          <rect x="165" y="236" width="6" height="15" fill="#0a1a0a"/>
+          <rect x="229" y="236" width="6" height="15" fill="#0a1a0a"/>
+          <!-- Fireflies -->
+          <circle cx="130" cy="190" r="2" fill="#C9A84C" opacity=".7"/>
+          <circle cx="270" cy="200" r="1.5" fill="#C9A84C" opacity=".6"/>
+          <circle cx="180" cy="170" r="1.5" fill="#F0D080" opacity=".5"/>
+          <circle cx="220" cy="185" r="2" fill="#F0D080" opacity=".6"/>
+        </svg>
+        <div class="gallery-caption">
+          <div class="gallery-caption-title">Центральный парк</div>
+          <div class="gallery-caption-ep">Любимые свидания</div>
+        </div>
+      </div>
+
+      <!-- 6: Brooklyn Bridge -->
+      <div class="gallery-item art-panel fade-up" style="transition-delay:.3s">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+          <defs>
+            <linearGradient id="river" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#020510"/>
+              <stop offset="60%" stop-color="#040818"/>
+              <stop offset="100%" stop-color="#060510"/>
+            </linearGradient>
+          </defs>
+          <rect width="400" height="300" fill="url(#river)"/>
+          <!-- Stars -->
+          <circle cx="80" cy="25" r="1" fill="white" opacity=".5"/>
+          <circle cx="200" cy="15" r="1.5" fill="white" opacity=".4"/>
+          <circle cx="340" cy="30" r="1" fill="#C9A84C" opacity=".5"/>
+          <!-- Bridge towers -->
+          <rect x="130" y="60" width="30" height="180" fill="#060810"/>
+          <rect x="240" y="60" width="30" height="180" fill="#060810"/>
+          <!-- Tower arches -->
+          <path d="M130,120 Q145,105 160,120" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity=".5"/>
+          <path d="M130,145 Q145,130 160,145" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity=".5"/>
+          <path d="M240,120 Q255,105 270,120" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity=".5"/>
+          <path d="M240,145 Q255,130 270,145" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity=".5"/>
+          <!-- Cables -->
+          <line x1="145" y1="65" x2="0" y2="200" stroke="#C9A84C" stroke-width=".8" opacity=".3"/>
+          <line x1="145" y1="65" x2="255" y2="200" stroke="#C9A84C" stroke-width=".8" opacity=".3"/>
+          <line x1="255" y1="65" x2="145" y2="200" stroke="#C9A84C" stroke-width=".8" opacity=".3"/>
+          <line x1="255" y1="65" x2="400" y2="200" stroke="#C9A84C" stroke-width=".8" opacity=".3"/>
+          <!-- Road -->
+          <rect x="0" y="195" width="400" height="15" fill="#050810"/>
+          <line x1="0" y1="202" x2="400" y2="202" stroke="#C9A84C" stroke-width=".5" opacity=".2"/>
+          <!-- Water + reflection -->
+          <rect x="0" y="210" width="400" height="90" fill="#030410"/>
+          <line x1="20" y1="225" x2="180" y2="225" stroke="#C9A84C" stroke-width=".5" opacity=".15"/>
+          <line x1="220" y1="235" x2="380" y2="235" stroke="#C9A84C" stroke-width=".5" opacity=".1"/>
+          <ellipse cx="145" cy="215" rx="10" ry="3" fill="#C9A84C" opacity=".1"/>
+          <ellipse cx="255" cy="215" rx="10" ry="3" fill="#C9A84C" opacity=".1"/>
+          <!-- Lanterns -->
+          <circle cx="0" cy="198" r="3" fill="#F0D080" opacity=".6"/>
+          <circle cx="80" cy="198" r="3" fill="#F0D080" opacity=".5"/>
+          <circle cx="160" cy="198" r="3" fill="#F0D080" opacity=".5"/>
+          <circle cx="240" cy="198" r="3" fill="#F0D080" opacity=".5"/>
+          <circle cx="320" cy="198" r="3" fill="#F0D080" opacity=".5"/>
+          <circle cx="400" cy="198" r="3" fill="#F0D080" opacity=".6"/>
+        </svg>
+        <div class="gallery-caption">
+          <div class="gallery-caption-title">Бруклинский мост</div>
+          <div class="gallery-caption-ep">Мир Дэна Хэмфри</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ RATING ══ -->
+<section class="rating-section" id="rating">
+  <div class="container">
+    <div class="fade-up" style="text-align:center;margin-bottom:48px">
+      <div class="section-label">Мой рейтинг</div>
+      <h2 class="section-title">Оцени<br><em>Любимые аспекты</em></h2>
+      <div class="divider" style="margin:24px auto 0"></div>
+    </div>
+    <div class="rating-grid fade-up">
+      <div class="rating-item">
+        <div class="rating-icon">👗</div>
+        <div class="rating-title">Мода и стиль</div>
+        <div class="stars">
+          <span class="star lit">★</span><span class="star lit">★</span>
+          <span class="star lit">★</span><span class="star lit">★</span><span class="star lit">★</span>
+        </div>
+        <div class="rating-score">10 / 10</div>
+      </div>
+      <div class="rating-item">
+        <div class="rating-icon">💔</div>
+        <div class="rating-title">Любовные линии</div>
+        <div class="stars">
+          <span class="star lit">★</span><span class="star lit">★</span>
+          <span class="star lit">★</span><span class="star lit">★</span><span class="star">★</span>
+        </div>
+        <div class="rating-score">9 / 10</div>
+      </div>
+      <div class="rating-item">
+        <div class="rating-icon">🗡️</div>
+        <div class="rating-title">Интриги & Drama</div>
+        <div class="stars">
+          <span class="star lit">★</span><span class="star lit">★</span>
+          <span class="star lit">★</span><span class="star lit">★</span><span class="star lit">★</span>
+        </div>
+        <div class="rating-score">10 / 10</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ NEWSLETTER ══ -->
+<section class="newsletter" id="newsletter">
+  <div class="container">
+    <div class="newsletter-inner fade-up">
+      <div class="section-label">XOXO</div>
+      <h2 class="section-title">Получай<br><em>Свежие Сплетни</em></h2>
+      <div class="divider"></div>
+      <p>Подпишись и получай письма как от самой Сплетницы — только самое интересное, только самое горячее.</p>
+      <div class="subscribe-form">
+        <input type="email" placeholder="Твой email, дорогая..."/>
+        <button class="btn btn-primary">Подписаться</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-logo">GG</div>
+    <div class="footer-tagline">You know you love me. XOXO, Gossip Girl.</div>
+    <ul class="footer-links">
+      <li><a href="#about">О сериале</a></li>
+      <li><a href="#characters">Персонажи</a></li>
+      <li><a href="#gallery">Галерея</a></li>
+      <li><a href="#rating">Рейтинг</a></li>
+    </ul>
+    <div class="footer-copy">Сделано с <span>♥</span> фанатом сериала · 2025 · Все права на Gossip Girl принадлежат The CW</div>
+  </div>
+</footer>
+
+<script>
+  // Particles
+  const pc = document.getElementById('particles');
+  for(let i=0;i<30;i++){
+    const p=document.createElement('div'); p.className='particle';
+    p.style.left=Math.random()*100+'%';
+    p.style.animationDuration=(8+Math.random()*14)+'s';
+    p.style.animationDelay=(Math.random()*12)+'s';
+    p.style.width=p.style.height=(1+Math.random()*3)+'px';
+    pc.appendChild(p);
+  }
+  // Scroll reveal
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);} });
+  },{threshold:.1});
+  document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+  // Tabs
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+  // Stars
+  document.querySelectorAll('.stars').forEach(starsEl=>{
+    const stars=starsEl.querySelectorAll('.star');
+    const scoreEl=starsEl.nextElementSibling;
+    stars.forEach((star,idx)=>{
+      star.addEventListener('mouseenter',()=>stars.forEach((s,i)=>s.style.filter=i<=idx?'none':'grayscale(1) opacity(.4)'));
+      star.addEventListener('mouseleave',()=>stars.forEach(s=>s.style.filter=s.classList.contains('lit')?'none':'grayscale(1) opacity(.4)'));
+      star.addEventListener('click',()=>{
+        stars.forEach((s,i)=>{ if(i<=idx){s.classList.add('lit');s.style.filter='none';}else{s.classList.remove('lit');s.style.filter='grayscale(1) opacity(.4)';} });
+        scoreEl.textContent=(idx+1)*2+' / 10';
+      });
+    });
+  });
+  // Subscribe
+  document.querySelector('.subscribe-form .btn-primary').addEventListener('click',()=>{
+    const inp=document.querySelector('.subscribe-form input');
+    if(inp.value.includes('@')){inp.value='';inp.placeholder='✦ Добро пожаловать в круг избранных!';}
+    else{inp.style.borderColor='#C9A84C';inp.placeholder='Введи корректный email...';inp.value='';}
+  });
+</script>
+</body>
+</html>
